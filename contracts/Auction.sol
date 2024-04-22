@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
 
+//login
+
 //I.bid điều kiện (đấu giá)
 //1.thời gian phiên đấu giá còn hoạt động
 //2.Giá trị đấu giá lớn hơn giá trị khởi điểm, tại thời điểm đó và > 0
@@ -18,6 +20,10 @@ pragma solidity >=0.4.22 <0.9.0;
 
 
 
+
+
+
+
 // bao gồm:
 // bid: cho phép người dùng đặt cược trong phiên đấu giá.
 // withdraw: cho phép người dùng rút tiền từ phiên đấu giá.
@@ -29,10 +35,18 @@ pragma solidity >=0.4.22 <0.9.0;
 
 contract Auction {
 
+    address public currentWinner;
+
+    function updateWinner() internal {
+    currentWinner = highestBider;
+    }
+
+
     address payable public beneficiary; 
     // Địa chỉ của người hưởng thụ
 
-    uint public auctionEndTime; 
+
+    uint public auctionEndTime = block.timestamp + 500; // Set auction duration to 500 seconds (8 minutes 20 seconds) 
     // Thời điểm kết thúc phiên đấu giá.
 
     uint public highestBid; 
@@ -88,6 +102,7 @@ contract Auction {
 
         highestBider  = msg.sender;//Cập nhật giá cao nhất biến highestBider
         highestBid = msg.value; //cập nhật giá trị cao nhất
+        updateWinner();  // Cập nhật người thắng cuộc mới
         
         //Increase: tăng
         emit highestBidIncrease(msg.sender, msg.value);
@@ -119,7 +134,7 @@ contract Auction {
         // Nếu ended là false (nghĩa là phiên đấu giá đã kết thúc), 
         require(!ended, "Phien dau gia da ket thuc");
         require(block.timestamp >= auctionEndTime, "Phien dau gia chua ket thuc");
-        require(msg.sender == beneficiary, "Chi nguoi bat dau dau gia moi co the ket thuc phien dau gia");
+       // require(msg.sender == beneficiary, "Chi nguoi bat dau dau gia moi co the ket thuc phien dau gia");
 
         ended = true;
 
@@ -159,6 +174,9 @@ contract Auction {
     function checkBalanceBeneficiry() public view returns (address, uint) {
         return (msg.sender, accountBalances[msg.sender] ); // Trả về số dư hiện tại của người gọi hàm
     }
-
+        // Kiểm tra số dư của một người tham gia
+    function checkBalance(address _participant) public view returns (uint) {
+        return accountBalances[_participant];
+    }
     
 }

@@ -1,4 +1,7 @@
-
 .headerApp {
     background-color: linear-gradient(to right, #ff9a9e, #fad0c4);
+}
+.container{
+    font-family: "arial";
+    font-size: 16px;
 }
