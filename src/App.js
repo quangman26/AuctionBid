@@ -1,4 +1,3 @@
-//test git
 import React, { useState, useEffect, useContext } from "react";
 import Web3 from "web3";
 import AuctionABI from "./AuctionABI.json";
@@ -6,7 +5,7 @@ import "bulma/css/bulma.min.css";
 import "./App.css";
 import { AddressContext } from "./AddressContext";
 
-const AuctionContractAddress = "0x9708F18f22Dc9F8FB5300F9a6306c1d1fa920a34";
+const AuctionContractAddress = "0x09a7BE594A4e321AF6e00c2cFcaE9A0C6F18632b";
 
 function App() {
   const [web3, setWeb3] = useState(null);

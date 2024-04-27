@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
 
-//login
-
 //I.bid điều kiện (đấu giá)
 //1.thời gian phiên đấu giá còn hoạt động
 //2.Giá trị đấu giá lớn hơn giá trị khởi điểm, tại thời điểm đó và > 0
@@ -17,10 +15,6 @@ pragma solidity >=0.4.22 <0.9.0;
 //sự kiện: tranfer(chuyển khoản)
 //1.tranfer sản phẩm của mình cho người thắng cuộc
 //2.tranfer số tiền của người chiến thắng cho người tạo phiên đấu giá
-
-
-
-
 
 
 
@@ -45,8 +39,7 @@ contract Auction {
     address payable public beneficiary; 
     // Địa chỉ của người hưởng thụ
 
-
-    uint public auctionEndTime = block.timestamp + 500; // Set auction duration to 500 seconds (8 minutes 20 seconds) 
+    uint public auctionEndTime; 
     // Thời điểm kết thúc phiên đấu giá.
 
     uint public highestBid; 
@@ -65,9 +58,10 @@ contract Auction {
     // Mapping mới để theo dõi số dư tài khoản
 
     //Sự kiện
-    event highestBidIncrease(address bidder, uint amount); 
+    event highestBidIncrease(address indexed bidder, uint amount); 
     // Sự kiện được kích hoạt khi có một lần đặt giá mới cao hơn. 
     //Địa chỉ của người đặt giá và số tiền đặt giá được ghi lại.
+
 
     event auctionEnded(address winner, uint amount); 
     // Sự kiện được kích hoạt khi phiên đấu giá kết thúc. 
@@ -134,7 +128,7 @@ contract Auction {
         // Nếu ended là false (nghĩa là phiên đấu giá đã kết thúc), 
         require(!ended, "Phien dau gia da ket thuc");
         require(block.timestamp >= auctionEndTime, "Phien dau gia chua ket thuc");
-       // require(msg.sender == beneficiary, "Chi nguoi bat dau dau gia moi co the ket thuc phien dau gia");
+        require(msg.sender == beneficiary, "Chi nguoi bat dau dau gia moi co the ket thuc phien dau gia");
 
         ended = true;
 
