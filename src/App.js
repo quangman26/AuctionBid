@@ -14,7 +14,7 @@ function App() {
   const [highestBid, setHighestBid] = useState("");
   const { address, setAddress, balance, setBalance } =
     useContext(AddressContext);
-  const [auctionTimeLeft, setAuctionTimeLeft] = useState(0);
+  const [biddingTime, setBiddingTime] = useState(0);
 
   const userBalance = localStorage.getItem("userBalance")
     ? parseFloat(localStorage.getItem("userBalance")).toFixed(3)
@@ -35,9 +35,6 @@ function App() {
           const web3Instance = new Web3(window.ethereum);
           await window.ethereum.request({ method: "eth_requestAccounts" });
           setWeb3(web3Instance);
-        } else if (window.web3) {
-          const web3Instance = new Web3(window.web3.currentProvider);
-          setWeb3(web3Instance);
         } else {
           throw new Error("Không tìm thấy Web3");
         }
@@ -45,9 +42,28 @@ function App() {
         console.error(error.message);
       }
     };
-
     initWeb3();
   }, []);
+
+  const fetchBiddingTime = async () => {
+    try {
+      const contract = new web3.eth.Contract(
+        AuctionABI,
+        AuctionContractAddress
+      );
+      const biddingTime = await contract.methods.getBiddingTime().call();
+      // Now you have the bidding time, you can set it in your component state
+      setBiddingTime(biddingTime);
+    } catch (error) {
+      console.error("Error fetching bidding time:", error);
+    }
+  };
+
+  // Call the fetchBiddingTime function when the component mounts
+  useEffect(() => {
+    fetchBiddingTime();
+  }, []);
+  //thời gian
 
   const handleBid = async () => {
     try {
@@ -135,8 +151,11 @@ function App() {
   console.log("Địa chỉ đã đăng nhập:", address);
   console.log("balance:", balance);
   return (
-    <div className="container">
-      <header className="headerApp">
+    <div className="container" style={{ fontFamily: "monospace" }}>
+      <header
+        className="headerApp box has-shadow "
+        style={{ marginBottom: "20px", fontSize: "16px" }}
+      >
         <nav className="navbar is-centered">
           <div className="navbar-item has-dropdown is-hoverable">
             <a className="navbar-link">☰</a>
@@ -174,9 +193,10 @@ function App() {
         </nav>
       </header>
 
-      <main>
-        <section className="section">
-          <div className="columns is-centered">
+      <main className="main">
+        <img src="gardening.png" style={{ marginBottom: "20px" }} />
+        <section className="section box has-shadow">
+          <div className="columns is-centered ">
             <div className="">
               <h1 className="has-text-centered" style={{ fontSize: "30px" }}>
                 Đấu giá
@@ -184,7 +204,7 @@ function App() {
               {/* Thêm hình ảnh vào đây */}
               <div className="has-text-centered  box has-shadow">
                 <p className="has-text-left" style={{ fontSize: "20px" }}>
-                  Thời gian đấu giá còn lại: {auctionTimeLeft} giây
+                  Thời gian đấu giá còn lại: {biddingTime} giây
                 </p>
               </div>
               <div className="field has-addons">
@@ -192,7 +212,7 @@ function App() {
                   <input
                     className="input"
                     type="text"
-                    placeholder="Số Ether đặt giá"
+                    placeholder="Nhập số eth mong muốn"
                     value={bidAmount}
                     onChange={(e) => setBidAmount(e.target.value)}
                   />

@@ -49,10 +49,15 @@ function Login() {
       alert(error.message);
     }
   };
-
   return (
-    <div className="container" style={{ fontFamily: "monospace" }}>
-      <header>
+    <div
+      className="container"
+      style={{ fontFamily: "monospace", fontSize: "16px" }}
+    >
+      <header
+        className="headerApp box has-shadow "
+        style={{ marginBottom: "20px" }}
+      >
         <nav className="navbar is-centered">
           <div className="navbar-item has-dropdown is-hoverable">
             <a className="navbar-link">☰</a>
@@ -90,7 +95,7 @@ function Login() {
         </nav>
       </header>
 
-      <main>
+      <main className="main">
         <section className="section">
           <div className="columns is-centered ">
             <div className="column is-half box has-shadow ">

@@ -67,10 +67,10 @@ contract Auction {
     // Sự kiện được kích hoạt khi phiên đấu giá kết thúc. 
     //Địa chỉ của người thắng cuộc và số tiền đặt giá cao nhất được ghi lại.
 
-    constructor(uint _biddingTime, address payable _beneficiary){
+    constructor(address payable _beneficiary){
         beneficiary = _beneficiary; // Thiết lập địa chỉ của người hưởng lợi từ phiên đấu giá. 
         //Người này sẽ nhận được tiền từ người thắng cuộc.
-
+        uint _biddingTime = 500;
         auctionEndTime = block.timestamp + _biddingTime; // Tính toán và thiết lập thời điểm kết thúc 
         //phiên đấu giá dựa trên thời gian đấu giá được cung cấp (_biddingTime) cộng với thời gian hiện tại (block.timestamp).
     }
@@ -164,6 +164,11 @@ contract Auction {
         }
         
     }
+
+    function getBiddingTime() public view returns (uint) {
+    return auctionEndTime - block.timestamp;
+    }
+
 
     function checkBalanceBeneficiry() public view returns (address, uint) {
         return (msg.sender, accountBalances[msg.sender] ); // Trả về số dư hiện tại của người gọi hàm
